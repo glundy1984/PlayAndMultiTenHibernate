@@ -1,0 +1,45 @@
+@import helper._
+
+@(schema:Form[Schema], schemaId: String, customers: List[Customer])
+
+@main("Welcome to Play and Multi-Tenant Hibernate Store") {
+
+<h1>Play and Multi-Tenant Hibernate Store</h1>
+
+<div id="form">
+@form(action = routes.Application.submit) {
+    @select(schema("schemaId"), options(("schema_a", "schema_a"), ("schema_b", "schema_b")), '_label -> "Select schema: ")
+    <button id="submitBtn">Submit</button>
+}
+</div>
+<table id="customerTable">
+    <caption><strong>Customers in @schemaId</strong></caption>
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Addesses
+        </th>
+    </tr>
+    @for(cust <- customers) {
+    <tr>
+        <td>
+            @cust.name
+        </td>
+        <td>
+            <table>
+                @for(custAddress <- cust.addresses) {
+                <tr>
+                    <td>
+                        @custAddress.address
+                    </td>
+                </tr>
+                }
+            </table>
+        </td>
+    </tr>
+    }
+</table>
+
+}

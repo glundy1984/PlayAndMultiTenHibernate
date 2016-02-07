@@ -1,0 +1,25 @@
+
+#customerTable {
+    border-collapse: collapse;
+}
+
+#customerTable, th, td, caption {
+    border: 1px solid black;
+    padding: 3px;
+}
+
+caption {
+    padding: 5px;
+}
+
+#form {
+    padding-bottom: 25px;
+}
+
+#schemaId_field, #schemaId_field dt, #schemaId_field dd  {
+    display: inline
+}
+
+#submitBtn {
+  margin-left: 50px;
+}
