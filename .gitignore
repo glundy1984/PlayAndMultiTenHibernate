@@ -8,3 +8,4 @@ dist
 .idea/
 .settings
 *.DS_Store
+logs/application.log

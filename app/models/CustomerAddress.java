@@ -7,11 +7,38 @@ import javax.persistence.*;
 public class CustomerAddress {
 
 	@Id
-	public Integer id;
+	@SequenceGenerator(name="customer_address_id_seq", sequenceName="customer_address_id_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="customer_address_id_seq")
+	private Integer id;
 
 	@Column
-	public String address;
+	private String address;
 
-	@Column(name="customer_id")
-	private Integer customerId;
+	@OneToOne
+	@JoinColumn(name = "customer_id", nullable = false)
+	private Customer customer;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
 }

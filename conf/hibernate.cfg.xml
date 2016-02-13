@@ -17,5 +17,6 @@
 
         <mapping class="models.Customer"/>
         <mapping class="models.CustomerAddress"/>
+        <mapping class="models.CreditCard"/>
     </session-factory>
 </hibernate-configuration>

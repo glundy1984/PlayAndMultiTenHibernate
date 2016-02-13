@@ -21,18 +21,32 @@
         <th>
             Addesses
         </th>
+        <th>
+            Encrypted Credit Cards
+        </th>
     </tr>
     @for(cust <- customers) {
     <tr>
         <td>
-            @cust.name
+            @cust.getName()
         </td>
         <td>
             <table>
-                @for(custAddress <- cust.addresses) {
+                @for(custAddress <- cust.getAddresses()) {
                 <tr>
                     <td>
-                        @custAddress.address
+                        @custAddress.getAddress()
+                    </td>
+                </tr>
+                }
+            </table>
+        </td>
+        <td>
+            <table>
+                @for(creditCard <- cust.getCreditCards()) {
+                <tr>
+                    <td>
+                        @creditCard.getNumber()
                     </td>
                 </tr>
                 }
