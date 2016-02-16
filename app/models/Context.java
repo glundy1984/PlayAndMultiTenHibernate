@@ -1,6 +1,5 @@
 package models;
 
-
 import java.security.KeyPair;
 
 public class Context {

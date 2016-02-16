@@ -1,5 +1,5 @@
 import models.CreditCard;
-import models.ModelEncryptionKey;
+import encryption.ModelEncryptionKey;
 import org.junit.Assert;
 import org.junit.Test;
 

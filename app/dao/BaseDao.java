@@ -1,13 +1,21 @@
 package dao;
 
-import dao.hibernate.HibernateUtil;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import models.Context;
 
-import java.util.function.Function;
+import java.util.List;
 
-public abstract class BaseDao {
+public interface BaseDao<T> {
 
-    //TODO: add a set of common operations for all Daos e.g. findAll, findById, delete, save, update etc
+    void create(Context context, T entity);
+
+    void update(Context context, T entity);
+
+    void delete(Context context, T entity);
+
+    void deleteById(Context context, Integer id);
+
+    T findById(Context context, int id);
+
+    List<T> findAll(Context context);
 
 }

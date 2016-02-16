@@ -20,12 +20,12 @@ public class Application extends Controller {
 
 	public Result index() throws Exception {
 		Context context = new Context("schema_a", EncryptionUtil.getTestKeyPair());
-		return ok(index.render(form, "schema_a", customerDao.getAll(context)));
+		return ok(index.render(form, "schema_a", customerDao.findAll(context)));
 	}
 
 	public Result submit() throws Exception {
 		String schemaId = form.bindFromRequest().get().schemaId;
 		Context context = new Context(schemaId, EncryptionUtil.getTestKeyPair());
-		return ok(index.render(form, schemaId, customerDao.getAll(context)));
+		return ok(index.render(form, schemaId, customerDao.findAll(context)));
 	}
 }

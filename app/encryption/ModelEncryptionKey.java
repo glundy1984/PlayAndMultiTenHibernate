@@ -1,12 +1,8 @@
-package models;
+package encryption;
 
-import encryption.AsymmetricEncryption;
-import encryption.SymmetricEncryption;
-
-import java.io.Serializable;
 import java.security.KeyPair;
 
-public class ModelEncryptionKey implements Serializable {
+public class ModelEncryptionKey {
 
     private byte[] encryptedKey;
     private transient byte[] decryptedKey;

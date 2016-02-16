@@ -1,6 +1,8 @@
 package dao.hibernate;
 
 import models.Context;
+import models.SecureModel;
+import net.bramp.objectgraph.ObjectGraph;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -9,6 +11,7 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 import java.security.KeyPair;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class HibernateUtil {
@@ -30,11 +33,23 @@ public class HibernateUtil {
         }
     }
 
+    /*
+     * Used to retrieve objects from the database / session
+     */
     public static <T> T withSession(Context context, Function<Session, T> function) {
         Session session = null;
+        Transaction tx = null;
         try {
             session = SESSION_FACTORY.withOptions().tenantIdentifier(context.getSchemaId()).openSession();
-            return setKeyPairOnObjectTree(function.apply(session), context.getKeyPair());
+            tx = session.beginTransaction();
+            // Objects being returned from the database / session have no KeyPair
+            // so we need to attach a KeyPair in order to decrypt data
+            T result = setKeyPairOnObjectGraph(function.apply(session), context.getKeyPair());
+            tx.commit();
+            return result;
+        } catch (Exception ex) {
+            if (tx != null) tx.rollback();
+            throw ex;
         } finally {
             if (session != null) {
                 session.close();
@@ -42,28 +57,42 @@ public class HibernateUtil {
         }
     }
 
-    public static <T> T withTransaction(Context context, Function<Session, T> function) {
+    /*
+     * Used to insert objects into the database / session.
+     * It is assumed that all objects that require encryption have an attached KeyPair
+     */
+    public static void withSession(Context context, Consumer<Session> consumer) {
         Session session = null;
-        Transaction transaction = null;
+        Transaction tx = null;
         try {
             session = SESSION_FACTORY.withOptions().tenantIdentifier(context.getSchemaId()).openSession();
-            transaction = session.beginTransaction();
-            return setKeyPairOnObjectTree(function.apply(session), context.getKeyPair());
+            tx = session.beginTransaction();
+            consumer.accept(session);
+            tx.commit();
+        } catch (Exception ex) {
+            if (tx != null) tx.rollback();
+            throw ex;
         } finally {
-            try {
-                if (transaction != null) {
-                    transaction.commit();
-                }
-            } finally {
-                if (session != null) {
-                    session.close();
-                }
+            if (session != null) {
+                session.close();
             }
         }
     }
 
-    //TODO: need to navigate object graph and setKeyPair
-    private static <T> T setKeyPairOnObjectTree(T objectTree, KeyPair keyPair) {
-        return objectTree;
+    private static <T> T setKeyPairOnObjectGraph(T objectGraph, KeyPair keyPair) {
+        ObjectGraph
+                .visitor(new ObjectGraph.Visitor() {
+                    @Override
+                    public boolean visit(Object object, Class clazz) {
+                        if (object instanceof SecureModel) {
+                            ((SecureModel) object).getModelKey().setKeyPair(keyPair);
+                        }
+                        return false;
+                    }
+                })
+                .excludeStatic()
+                .excludeTransient()
+                .traverse(objectGraph);
+        return objectGraph;
     }
 }

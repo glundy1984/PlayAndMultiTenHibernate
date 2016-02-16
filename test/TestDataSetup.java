@@ -32,11 +32,11 @@ public class TestDataSetup {
 
         CustomerDao customDao = new CustomerDaoImpl();
 
-        List<Customer> customers = customDao.getAll(context);
+        List<Customer> customers = customDao.findAll(context);
 
         for (Customer customer : customers) {
 
-            HibernateUtil.withTransaction(context, session -> {
+            HibernateUtil.withSession(context, session -> {
 
                 CreditCard creditCard = new CreditCard();
                 creditCard.getModelKey().setKeyPair(context.getKeyPair());
@@ -45,8 +45,6 @@ public class TestDataSetup {
                 creditCard.setCustomer(customer);
 
                 session.save(creditCard);
-
-                return null;
             });
         }
     }

@@ -1,6 +1,6 @@
 package dao.hibernate;
 
-import models.ModelEncryptionKey;
+import encryption.ModelEncryptionKey;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.type.MaterializedBlobType;
@@ -16,11 +16,12 @@ public class ModelEncryptionKeyType implements UserType {
 
     @Override
     public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
-        ModelEncryptionKey modelEncryptionKey = null;
+        byte[] encryptedKey = rs.getBytes(names[0]);
         if (!rs.wasNull()) {
-            modelEncryptionKey = new ModelEncryptionKey(rs.getBytes(names[0]));
+            return new ModelEncryptionKey(encryptedKey);
+        } else {
+            return null;
         }
-        return modelEncryptionKey;
     }
 
     @Override
@@ -57,7 +58,6 @@ public class ModelEncryptionKeyType implements UserType {
     * The following methods assume Hibernate is only concerned with the encrypted key
     * (the unencrypted key and keyPair are not persisted).
     * #deepCopy along with #getEncryptedKey is used to ensure the encrypted key is populated.
-    * TODO: these methods need tested
     */
 
     /**

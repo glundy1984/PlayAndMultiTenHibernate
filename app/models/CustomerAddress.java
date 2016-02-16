@@ -4,12 +4,8 @@ import javax.persistence.*;
 
 @Entity
 @Table(name="customer_address")
-public class CustomerAddress {
-
-	@Id
-	@SequenceGenerator(name="customer_address_id_seq", sequenceName="customer_address_id_seq")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="customer_address_id_seq")
-	private Integer id;
+@SequenceGenerator(name="default_gen", sequenceName="customer_address_id_seq")
+public class CustomerAddress extends BaseModel {
 
 	@Column
 	private String address;
@@ -17,14 +13,6 @@ public class CustomerAddress {
 	@OneToOne
 	@JoinColumn(name = "customer_id", nullable = false)
 	private Customer customer;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	public String getAddress() {
 		return address;

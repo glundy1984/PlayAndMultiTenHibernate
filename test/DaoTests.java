@@ -29,7 +29,7 @@ public class DaoTests {
 
         customer.getCreditCards().add(creditCard);
 
-        HibernateUtil.withTransaction(context, session -> {
+        HibernateUtil.withSession(context, session -> {
 
             session.save(customer);
             session.flush();
@@ -48,8 +48,6 @@ public class DaoTests {
             session.clear();
 
             session.delete(customer);
-
-            return null;
         });
     }
 }

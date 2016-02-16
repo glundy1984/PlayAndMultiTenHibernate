@@ -1,10 +1,9 @@
-import dao.CustomerDao;
-import dao.impl.CustomerDaoImpl;
-import play.GlobalSettings;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import dao.CustomerDao;
+import dao.impl.CustomerDaoImpl;
+import play.GlobalSettings;
 
 public class Global extends GlobalSettings {
 
